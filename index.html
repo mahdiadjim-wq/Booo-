@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Water Glow Popup</title>
+<title>Water Glow Stars</title>
 <style>
   /* ====== الخلفية ====== */
   body {
@@ -12,45 +12,44 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(180deg, #a3c4f3 0%, #1e1f42 100%);
+    background: radial-gradient(circle at top, #0a1f3d 0%, #1e1f42 100%);
     font-family: Arial, sans-serif;
     overflow: hidden;
     color: #fff;
   }
 
-  /* ====== container للأيقونات ====== */
-  .weather-container {
-    position: absolute;
-    bottom: 25px;
-    left: 25px;
+  /* ====== container أيقونات في الوسط ====== */
+  .center-icons {
     display: flex;
-    gap: 50px;
+    gap: 80px;
     z-index: 10;
+    position: relative;
   }
 
-  /* ====== أيقونات water cute ====== */
+  /* ====== أيقونات كبيرة ومتناسقة ====== */
   .weather-icon {
     position: relative;
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     background: linear-gradient(145deg, #6bc1ff, #1e90ff);
     color: #fff;
-    font-size: 32px;
+    font-size: 48px;
     cursor: pointer;
-    box-shadow: 0 0 15px rgba(0,255,255,0.4);
+    box-shadow: 0 0 20px rgba(0,255,255,0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: float 3s ease-in-out infinite;
   }
 
   .weather-icon:hover {
-    transform: scale(1.2);
-    box-shadow: 0 0 25px rgba(0,255,255,0.6);
+    transform: scale(1.25);
+    box-shadow: 0 0 30px rgba(0,255,255,0.6);
   }
 
-  /* ====== sparkle water ====== */
+  /* ====== sparkle داخل الأيقونات ====== */
   .weather-icon::after {
     content: '';
     position: absolute;
@@ -59,6 +58,11 @@
     background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
     opacity: 0.5;
     animation: spark 0.6s infinite alternate;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
   }
 
   @keyframes spark {
@@ -74,10 +78,10 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(0,0,50,0.85);
-    padding: 40px 60px;
+    padding: 50px 70px;
     border-radius: 25px;
     text-align: center;
-    font-size: 26px;
+    font-size: 28px;
     line-height: 1.6;
     color: #fff;
     opacity: 0;
@@ -89,18 +93,17 @@
 
   .popup.show { opacity: 1; pointer-events: auto; }
 
-  /* ====== زر cute ====== */
   .popup button {
-    margin-top: 20px;
-    padding: 10px 26px;
+    margin-top: 25px;
+    padding: 12px 30px;
     border: none;
     background: linear-gradient(135deg, #6bc1ff, #1e90ff);
     color: #fff;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 18px;
     border-radius: 50px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,255,255,0.3);
+    box-shadow: 0 5px 15px rgba(0,255,255,0.3);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     position: relative;
     overflow: hidden;
@@ -119,14 +122,17 @@
 
   .popup button:hover {
     transform: scale(1.15);
-    box-shadow: 0 6px 20px rgba(0,255,255,0.5);
+    box-shadow: 0 8px 25px rgba(0,255,255,0.5);
   }
+
+  /* ====== canvas للنجوم ====== */
+  canvas { position: absolute; top:0; left:0; display:block; z-index:1; }
 
 </style>
 </head>
 <body>
 
-<div class="weather-container">
+<div class="center-icons">
   <div class="weather-icon sun">☀️</div>
   <div class="weather-icon moon">🌙</div>
 </div>
@@ -136,7 +142,10 @@
   <button onclick="closePopup()">اغلاق</button>
 </div>
 
+<canvas id="starsCanvas"></canvas>
+
 <script>
+  // Popup
   const popup = document.getElementById('popup');
   const popupText = document.getElementById('popupText');
 
@@ -151,6 +160,41 @@
   });
 
   function closePopup() { popup.classList.remove('show'); }
+
+  // Stars background
+  const canvas = document.getElementById('starsCanvas');
+  const ctx = canvas.getContext('2d');
+  let w = canvas.width = window.innerWidth;
+  let h = canvas.height = window.innerHeight;
+
+  const stars = [];
+  const numStars = 150; // نجوم قليلة وهادئة
+
+  for(let i=0;i<numStars;i++){
+    stars.push({ x: Math.random()*w, y: Math.random()*h, r: Math.random()*1.5+0.5, opacity: Math.random() });
+  }
+
+  function animateStars(){
+    ctx.fillStyle = '#0a1f3d'; // لون داكن للخلفية
+    ctx.fillRect(0,0,w,h);
+    for(let i=0;i<numStars;i++){
+      const s = stars[i];
+      s.opacity += (Math.random()-0.5)*0.02; // خفيفة توهج
+      if(s.opacity<0) s.opacity=0;
+      if(s.opacity>1) s.opacity=1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${s.opacity})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(animateStars);
+  }
+  animateStars();
+
+  window.addEventListener('resize', ()=>{
+    w=canvas.width=window.innerWidth;
+    h=canvas.height=window.innerHeight;
+  });
 </script>
 
 </body>
