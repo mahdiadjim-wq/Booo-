@@ -3,198 +3,154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Booo- Cute Water Stars</title>
+<title>Water Glow Popup</title>
 <style>
-    /* ====== الخلفية ====== */
-    body {
-        margin: 0;
-        height: 100vh;
-        overflow: hidden;
-        font-family: Arial, sans-serif;
-        background: linear-gradient(180deg, #a3c4f3 0%, #1e1f42 100%);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        perspective: 1000px;
-        color: #fff;
-    }
+  /* ====== الخلفية ====== */
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(180deg, #a3c4f3 0%, #1e1f42 100%);
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    color: #fff;
+  }
 
-    /* ====== الأيقونات ====== */
-    .icons {
-        display: flex;
-        gap: 60px;
-        z-index: 10;
-        position: relative;
-    }
+  /* ====== container للأيقونات ====== */
+  .weather-container {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    display: flex;
+    gap: 50px;
+    z-index: 10;
+  }
 
-    .icon {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 60px;
-        color: #fff;
-        cursor: pointer;
-        background: radial-gradient(circle at 30% 30%, #ffecd2, #fcbf49);
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 0 20px rgba(255,255,255,0.5);
-        animation: float 3s ease-in-out infinite;
-    }
+  /* ====== أيقونات water cute ====== */
+  .weather-icon {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(145deg, #6bc1ff, #1e90ff);
+    color: #fff;
+    font-size: 32px;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0,255,255,0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
 
-    .icon.moon {
-        background: radial-gradient(circle at 30% 30%, #d0e7ff, #6b7dff);
-        color: #f0f8ff;
-    }
+  .weather-icon:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 25px rgba(0,255,255,0.6);
+  }
 
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-15px); }
-    }
+  /* ====== sparkle water ====== */
+  .weather-icon::after {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+    opacity: 0.5;
+    animation: spark 0.6s infinite alternate;
+  }
 
-    /* ====== sparkle داخل الأيقونات ====== */
-    .icon::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
-        animation: sparkle 1.5s infinite;
-    }
+  @keyframes spark {
+    0% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.5); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.4; }
+  }
 
-    @keyframes sparkle {
-        0%, 100% { opacity: 0.2; transform: scale(1); }
-        50% { opacity: 1; transform: scale(1.4); }
-    }
+  /* ====== popup ====== */
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,50,0.85);
+    padding: 40px 60px;
+    border-radius: 25px;
+    text-align: center;
+    font-size: 26px;
+    line-height: 1.6;
+    color: #fff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: 100;
+    text-shadow: 0 0 8px rgba(0,0,0,0.7);
+  }
 
-    /* ====== نافذة الآيات ====== */
-    .popup {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0,0,0,0.7);
-        padding: 40px 60px;
-        border-radius: 25px;
-        text-align: center;
-        font-size: 28px;
-        font-weight: bold;
-        line-height: 1.8;
-        color: #fff;
-        max-width: 90%;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.5s ease;
-        z-index: 100;
-        text-shadow: 0 0 10px rgba(0,0,0,0.7);
-    }
+  .popup.show { opacity: 1; pointer-events: auto; }
 
-    .popup.show { opacity: 1; pointer-events: auto; }
+  /* ====== زر cute ====== */
+  .popup button {
+    margin-top: 20px;
+    padding: 10px 26px;
+    border: none;
+    background: linear-gradient(135deg, #6bc1ff, #1e90ff);
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,255,255,0.3);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
 
-    /* ====== زر مائي وcute ====== */
-    .popup button {
-        margin-top: 20px;
-        padding: 12px 28px;
-        border: none;
-        background: linear-gradient(135deg, #a3c4f3, #6b7dff);
-        color: #fff;
-        font-weight: bold;
-        font-size: 18px;
-        border-radius: 50px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(255,255,255,0.3);
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
+  .popup button::after {
+    content: '';
+    position: absolute;
+    inset: -0.2em;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%);
+    opacity: 0.3;
+    animation: spark 0.6s infinite alternate;
+    z-index: -1;
+  }
 
-    .popup button::after {
-        content: '';
-        position: absolute;
-        inset: -0.2em;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%);
-        opacity: 0.3;
-        animation: sparkle 1.5s infinite;
-        z-index: -1;
-    }
-
-    .popup button:hover {
-        transform: scale(1.15);
-        box-shadow: 0 8px 25px rgba(255,255,255,0.6);
-    }
-
-    /* ====== canvas للنجوم ====== */
-    canvas { position: absolute; top:0; left:0; display:block; z-index:1; }
+  .popup button:hover {
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(0,255,255,0.5);
+  }
 
 </style>
 </head>
 <body>
 
-<div class="icons">
-    <div class="icon sun">☀️</div>
-    <div class="icon moon">🌘</div>
+<div class="weather-container">
+  <div class="weather-icon sun">☀️</div>
+  <div class="weather-icon moon">🌙</div>
 </div>
 
 <div class="popup" id="popup">
-    <div id="popupText"></div>
-    <button onclick="closePopup()">اغلاق</button>
+  <div id="popupText"></div>
+  <button onclick="closePopup()">اغلاق</button>
 </div>
 
-<canvas id="starsCanvas"></canvas>
-
 <script>
-    // Popup الآيات
-    const popup = document.getElementById('popup');
-    const popupText = document.getElementById('popupText');
+  const popup = document.getElementById('popup');
+  const popupText = document.getElementById('popupText');
 
-    document.querySelector('.icon.sun').addEventListener('click', () => {
-        popupText.textContent = "إِنَّ الْمُتَّقِينَ فِي جَنَّاتٍ وَنَهَرٍ ۝ فِي مَقْعَدِ صِدْقٍ عِندَ مَلِيكٍ مُقْتَدِرٍ";
-        popup.classList.add('show');
-    });
+  document.querySelector('.sun').addEventListener('click', () => {
+    popupText.textContent = "إِنَّ الْمُتَّقِينَ فِي جَنَّاتٍ وَنَهَرٍ ۝ فِي مَقْعَدِ صِدْقٍ عِندَ مَلِيكٍ مُقْتَدِرٍ";
+    popup.classList.add('show');
+  });
 
-    document.querySelector('.icon.moon').addEventListener('click', () => {
-        popupText.textContent = "وَدَّ أَفْلَحَ مَن زَكَّاهَا ۝ وَقَدْ خَابَ مَن دَسَّاهَا";
-        popup.classList.add('show');
-    });
+  document.querySelector('.moon').addEventListener('click', () => {
+    popupText.textContent = "وَدَّ أَفْلَحَ مَن زَكَّاهَا ۝ وَقَدْ خَابَ مَن دَسَّاهَا";
+    popup.classList.add('show');
+  });
 
-    function closePopup(){ popup.classList.remove('show'); }
-
-    // نجوم 3D
-    const canvas = document.getElementById('starsCanvas');
-    const ctx = canvas.getContext('2d');
-    let w = canvas.width = window.innerWidth;
-    let h = canvas.height = window.innerHeight;
-
-    const stars = [];
-    const numStars = 400;
-
-    for(let i=0; i<numStars; i++){
-        stars.push({ x: Math.random()*w - w/2, y: Math.random()*h - h/2, z: Math.random()*w, size: Math.random()*2+0.5 });
-    }
-
-    function animateStars(){
-        ctx.fillStyle = 'rgba(30,31,66,0.7)';
-        ctx.fillRect(0,0,w,h);
-        for(let i=0; i<numStars; i++){
-            const star = stars[i];
-            star.z -= 2;
-            if(star.z < 1) star.z = w;
-            const sx = (star.x / star.z) * 500 + w/2;
-            const sy = (star.y / star.z) * 500 + h/2;
-            const r = (1 - star.z / w) * star.size * 2;
-            ctx.beginPath();
-            ctx.arc(sx, sy, r, 0, Math.PI*2);
-            ctx.fillStyle = 'white';
-            ctx.fill();
-        }
-        requestAnimationFrame(animateStars);
-    }
-
-    animateStars();
-    window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+  function closePopup() { popup.classList.remove('show'); }
 </script>
 
 </body>
